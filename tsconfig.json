@@ -1,0 +1,10 @@
+{
+  "extends": "@docleus/config/tsconfig.base.json",
+  "compilerOptions": {
+    "noEmit": true,
+    "lib": ["ES2023"],
+    "types": ["node"]
+  },
+  "include": ["src", "tests"],
+  "references": [{ "path": "../docleus-core/packages/kernel/vendor/cordis" }]
+}
