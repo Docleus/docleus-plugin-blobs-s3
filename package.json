@@ -1,6 +1,6 @@
 {
   "name": "@docleus/plugin-blobs-s3",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "private": true,
   "type": "module",
   "description": "Blob storage on S3-compatible object stores (AWS S3, Cloudflare R2, MinIO).",
@@ -29,7 +29,7 @@
     "check": "pnpm typecheck && pnpm lint && pnpm format:check && pnpm deps && pnpm license && pnpm test"
   },
   "peerDependencies": {
-    "@docleus/sdk": ">=0.0.1 <0.0.5"
+    "@docleus/sdk": ">=0.0.1 <0.0.6"
   },
   "devDependencies": {
     "@docleus/config": "link:../docleus-core/packages/config",
