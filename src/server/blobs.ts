@@ -39,7 +39,11 @@ function sign(secret: Uint8Array, hash: string, expiresAt: number): string {
   return `${payload}.${mac}`;
 }
 
-function verify(secret: Uint8Array, token: string): string | undefined {
+function verify(
+  secret: Uint8Array,
+  token: string,
+  now: number,
+): string | undefined {
   const lastDot = token.lastIndexOf(".");
   const middleDot = token.lastIndexOf(".", lastDot - 1);
   if (lastDot < 0 || middleDot < 0) return undefined;
@@ -53,7 +57,7 @@ function verify(secret: Uint8Array, token: string): string | undefined {
   if (mac.length !== expected.length || !timingSafeEqual(mac, expected)) {
     return undefined;
   }
-  if (!Number.isFinite(expiresAt) || Date.now() > expiresAt) return undefined;
+  if (!Number.isFinite(expiresAt) || now > expiresAt) return undefined;
   return hash;
 }
 
@@ -115,6 +119,6 @@ export function createS3BlobsService(options: S3BlobsOptions): BlobsService {
       assertHash(hash);
       return sign(secret, hash, expiresAt);
     },
-    verify: (token) => verify(secret, token),
+    verify: (token) => verify(secret, token, now()),
   };
 }

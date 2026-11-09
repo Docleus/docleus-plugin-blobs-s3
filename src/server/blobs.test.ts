@@ -138,6 +138,27 @@ describe("createS3BlobsService", () => {
     expect(setup().blobs.verify(token)).toBeUndefined();
   });
 
+  it("uses the injected clock on every token verification", () => {
+    const s3 = createFakeS3();
+    const client = createS3Client({
+      ...FAKE_S3,
+      forcePathStyle: true,
+      requestTimeoutMs: 5_000,
+      fetch: s3.fetch,
+    });
+    let now = 1000;
+    const blobs = createS3BlobsService({ client, prefix: "", now: () => now });
+    const token = blobs.sign(HELLO, 2000);
+    expect(blobs.verify(token)).toBe(HELLO);
+    now = 2000;
+    expect(blobs.verify(token)).toBe(HELLO);
+    now = 2001;
+    expect(blobs.verify(token)).toBeUndefined();
+    now = 1000;
+    expect(blobs.verify(token.replace(HELLO, "0".repeat(64)))).toBeUndefined();
+    expect(s3.requests).toEqual([]);
+  });
+
   it("rejects tokens for malformed hashes", () => {
     const { blobs } = setup();
     expect(() => blobs.sign("nope", Date.now())).toThrow(
