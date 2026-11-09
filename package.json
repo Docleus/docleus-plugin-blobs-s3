@@ -1,6 +1,6 @@
 {
   "name": "@docleus/plugin-blobs-s3",
-  "version": "0.0.8",
+  "version": "0.0.9",
   "private": true,
   "type": "module",
   "description": "Blob storage on S3-compatible object stores (AWS S3, Cloudflare R2, MinIO).",

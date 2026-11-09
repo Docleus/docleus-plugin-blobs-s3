@@ -1,6 +1,6 @@
 {
   "name": "@docleus/plugin-blobs-s3",
-  "version": "0.0.8",
+  "version": "0.0.9",
   "engines": {
     "docleus": ">=0.0.1 <0.0.9"
   },
