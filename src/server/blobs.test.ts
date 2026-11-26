@@ -105,6 +105,19 @@ describe("createS3BlobsService", () => {
     expect((await listed(blobs)).map((entry) => entry.hash)).toEqual([hash]);
   });
 
+  it("retains an observed blob when the store cannot safely delete its generation", async () => {
+    const { s3, blobs } = setup();
+    await blobs.put(bytes("hello"));
+    const [entry] = await listed(blobs);
+    if (!entry) throw new Error("listed blob missing");
+    expect(blobs.deleteIfUnchanged).toBeTypeOf("function");
+    expect(await blobs.deleteIfUnchanged?.(entry)).toBe(false);
+    expect(await blobs.get(entry.hash)).toEqual(bytes("hello"));
+    expect(s3.requests.some((request) => request.method === "DELETE")).toBe(
+      false,
+    );
+  });
+
   it("does not send DELETE for a blob that is not there", async () => {
     const { s3, blobs } = setup();
     expect(await blobs.delete("0".repeat(64))).toBe(false);
