@@ -102,6 +102,10 @@ export function createS3BlobsService(options: S3BlobsOptions): BlobsService {
       await client.deleteObject(key);
       return true;
     },
+    async deleteIfUnchanged() {
+      // Same-byte rewrites reuse ETags; portable S3 cannot identify this generation.
+      return false;
+    },
     async *list(): AsyncGenerator<BlobEntry> {
       let token: string | undefined;
       do {
